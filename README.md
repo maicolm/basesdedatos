@@ -66,6 +66,6 @@ Cliente compatible (Workbench, SSMS, SQL Developer)
 Permisos para ejecutar scripts de creación y manipulación de objetos
 
 📧 Contacto
-Desarrollado por: Maicolm Rivera Zamudio
-Equipo de Modelado de Datos
+Desarrollado por: Maicolm Rivera Zamudio realizando labores de modelado de datos.
+
 📨 grupoxpertos@gmail.com
