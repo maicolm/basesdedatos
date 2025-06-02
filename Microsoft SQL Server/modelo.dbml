@@ -1,0 +1,121 @@
+Project ColegioDB {
+  database_type: "SQL Server"
+}
+
+Table Sedes {
+  SedeID int [pk, increment]
+  Nombre varchar
+  Distrito varchar
+  Direccion nvarchar
+  Telefono varchar
+  Email varchar
+}
+
+Table Turnos {
+  TurnoID int [pk, increment]
+  Nombre varchar
+}
+
+Table Grados {
+  GradoID int [pk, increment]
+  Nombre varchar
+}
+
+Table Secciones {
+  SeccionID int [pk, increment]
+  Letra char
+}
+
+Table Alumnos {
+  AlumnoID int [pk, increment]
+  Nombres varchar
+  Apellidos varchar
+  FechaNacimiento date
+  DNI char [unique]
+  Sexo char
+  Direccion nvarchar
+  TurnoID int [ref: > Turnos.TurnoID]
+  GradoID int [ref: > Grados.GradoID]
+  SeccionID int [ref: > Secciones.SeccionID]
+  SedeID int [ref: > Sedes.SedeID]
+  Estado bit
+}
+
+Table Tutores {
+  TutorID int [pk, increment]
+  Nombres varchar
+  Apellidos varchar
+  Telefono varchar
+  Email varchar
+  DNI char [unique]
+  Direccion nvarchar
+}
+
+Table AlumnoTutor {
+  AlumnoID int [ref: > Alumnos.AlumnoID]
+  TutorID int [ref: > Tutores.TutorID]
+  Parentesco varchar
+  Note: "PK compuesta"
+}
+
+Table Profesores {
+  ProfesorID int [pk, increment]
+  Nombres varchar
+  Apellidos varchar
+  Especialidad varchar
+  Telefono varchar
+  Email varchar
+  SedeID int [ref: > Sedes.SedeID]
+}
+
+Table Asistencias {
+  AsistenciaID int [pk, increment]
+  AlumnoID int [ref: > Alumnos.AlumnoID]
+  Fecha date
+  Estado char
+  Observacion nvarchar
+}
+
+Table Pensiones {
+  PencionID int [pk, increment]
+  AlumnoID int [ref: > Alumnos.AlumnoID]
+  Mes int
+  Anio int
+  MontoTotal money
+  EstadoPago bit
+  Comentario nvarchar
+}
+
+Table PensionPagos {
+  PagoID int [pk, increment]
+  PencionID int [ref: > Pensiones.PencionID]
+  FechaPago datetime
+  MontoPagado money
+  MetodoPago varchar
+  Comentario nvarchar
+}
+
+Table Productos {
+  ProductoID int [pk, increment]
+  Nombre varchar
+  Descripcion text
+  Precio money
+  Stock int
+}
+
+Table Ventas {
+  VentaID int [pk, increment]
+  AlumnoID int [ref: > Alumnos.AlumnoID]
+  Fecha datetime
+  Total money
+  Comentario nvarchar
+  SedeID int [ref: > Sedes.SedeID]
+}
+
+Table DetalleVenta {
+  DetalleID int [pk, increment]
+  VentaID int [ref: > Ventas.VentaID]
+  ProductoID int [ref: > Productos.ProductoID]
+  Cantidad int
+  PrecioUnitario money
+}

@@ -1,0 +1,115 @@
+Project libreria_peru {
+  database_type: "MySQL"
+  note: "Diagrama ERD de la base de datos para una librería con sedes en Lima, Perú"
+}
+
+Table distritos {
+  id int [pk, increment] // ID del distrito
+  nombre varchar(100) [unique, not null] // Nombre del distrito de Lima
+}
+
+Table sedes {
+  id int [pk, increment] // ID de la sede
+  nombre varchar(100) [not null] // Nombre de la sede
+  direccion text [not null] // Dirección de la sede
+  distrito_id int [not null, ref: > distritos.id] // Distrito asociado
+  telefono varchar(20) // Teléfono de la sede
+}
+
+Table categorias_libros {
+  id int [pk, increment] // ID de la categoría
+  nombre varchar(100) [not null] // Nombre de la categoría
+  descripcion text // Descripción de la categoría
+}
+
+Table autores {
+  id int [pk, increment] // ID del autor
+  nombre_completo varchar(150) [not null] // Nombre completo del autor
+  nacionalidad varchar(100) // Nacionalidad
+  biografia text // Biografía
+}
+
+Table libros {
+  id int [pk, increment] // ID del libro
+  titulo varchar(200) [not null] // Título del libro
+  autor_id int [not null, ref: > autores.id] // Autor del libro
+  categoria_id int [not null, ref: > categorias_libros.id] // Categoría
+  isbn varchar(20) [unique] // ISBN
+  editorial varchar(100) // Editorial
+  anio_publicacion year // Año de publicación
+  precio decimal(10,2) [not null] // Precio del libro
+  stock int [not null, default: 0] // Stock general
+}
+
+Table stock_sede_libro {
+  sede_id int [ref: > sedes.id] // Sede
+  libro_id int [ref: > libros.id] // Libro
+  stock int [not null, default: 0] // Stock en sede
+  Note: "Relación muchos a muchos entre libros y sedes"
+  indexes {
+    (sede_id, libro_id) [pk]
+  }
+}
+
+Table clientes {
+  id int [pk, increment] // ID del cliente
+  nombres varchar(100) [not null] // Nombres
+  apellidos varchar(100) [not null] // Apellidos
+  email varchar(100) [unique] // Email
+  telefono varchar(20) // Teléfono
+  direccion text // Dirección
+}
+
+Table ventas {
+  id int [pk, increment] // ID de la venta
+  cliente_id int [not null, ref: > clientes.id] // Cliente
+  sede_id int [not null, ref: > sedes.id] // Sede de venta
+  fecha datetime [not null] // Fecha de la venta
+  total decimal(10,2) [not null] // Total
+}
+
+Table detalle_ventas {
+  venta_id int [ref: > ventas.id] // ID de la venta
+  libro_id int [ref: > libros.id] // Libro vendido
+  cantidad int [not null] // Cantidad
+  precio_unitario decimal(10,2) [not null] // Precio unitario
+  indexes {
+    (venta_id, libro_id) [pk]
+  }
+}
+
+Table talleres {
+  id int [pk, increment] // ID del taller
+  titulo varchar(150) [not null] // Título
+  descripcion text // Descripción
+  fecha date [not null] // Fecha del taller
+  sede_id int [not null, ref: > sedes.id] // Sede del taller
+  cupos int [not null] // Cupos disponibles
+}
+
+Table eventos {
+  id int [pk, increment] // ID del evento
+  titulo varchar(150) [not null] // Título
+  descripcion text // Descripción
+  autor_id int [ref: > autores.id] // Autor invitado (opcional)
+  fecha date [not null] // Fecha del evento
+  sede_id int [not null, ref: > sedes.id] // Sede del evento
+}
+
+Table inscripciones_taller {
+  taller_id int [ref: > talleres.id] // Taller
+  cliente_id int [ref: > clientes.id] // Cliente inscrito
+  fecha_inscripcion datetime // Fecha de inscripción
+  indexes {
+    (taller_id, cliente_id) [pk]
+  }
+}
+
+Table asistencia_eventos {
+  evento_id int [ref: > eventos.id] // Evento
+  cliente_id int [ref: > clientes.id] // Cliente asistente
+  fecha_registro datetime // Fecha de confirmación
+  indexes {
+    (evento_id, cliente_id) [pk]
+  }
+}
